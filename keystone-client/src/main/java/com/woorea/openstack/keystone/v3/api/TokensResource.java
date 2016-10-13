@@ -14,15 +14,29 @@ public class TokensResource {
 	public TokensResource(OpenStackClient client) {
 		CLIENT = client;
 	}
+
+	public class Delete extends OpenStackRequest<Void> {
+		public Delete(String id) {
+	         super(CLIENT, HttpMethod.DELETE, "/auth/tokens", null, Void.class);
+	     }
+	}
 	
 	public Authenticate authenticate(Authentication authentication) {
 		return new Authenticate(authentication);
 	}
 	
+	public Delete revoke(String id) {
+		return new Delete(id);
+	}
+
 	public OpenStackRequest<Token> show() {
 		return CLIENT.get("/auth/tokens", Token.class);
 	}
 
+	public OpenStackRequest<String> getRevoked() {
+		return CLIENT.get("/auth/tokens/OS-PKI/revoked", String.class);
+	}
+	
 	public class Authenticate extends OpenStackRequest<Token> {
 		
 		private Authentication authentication;
@@ -39,4 +53,3 @@ public class TokensResource {
 	}
 	
 }
-
